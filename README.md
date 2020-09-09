@@ -1,5 +1,9 @@
 # Discuss
 
+Discuss is a Phoenix Framework based example project based as shown in a udemy
+course (The Complete Elixir and Phoenix Bootcamp). Discuss allows a user to
+create a topic that other users can comment on. Login is done using openID.
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
