@@ -5,6 +5,7 @@ defmodule DiscussWeb.TopicController do
 
 
   def index(conn, _param) do
+    IO.inspect(conn.assigns)
     topics = DT.list_topics()
     render conn, "index.html", topics: topics
   end

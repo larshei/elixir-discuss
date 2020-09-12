@@ -3,8 +3,8 @@
     <%= for topic <- @topics do %>
     <li class="collection-item">
         <%= topic.title %>
-        <div class="right waves-light btn-flat"><%= link "Edit", to: Routes.topic_path(@conn, :edit, topic) %></div>
-        <div class="right waves-light btn-flat"><%= link "Delete", to: Routes.topic_path(@conn, :delete, topic), method: :delete %></div>
+        <div class="right waves-light btn-flat"><%= link "Edit", to: Routes.topic_path(@conn, :edit, topic) %><i class="material-icons">edit</i></div>
+        <div class="right waves-light btn-flat"><%= link "Delete", to: Routes.topic_path(@conn, :delete, topic), method: :delete %><i class="material-icons">delete_forever</i></div>
     </li>
     <% end %>
 </ul>
