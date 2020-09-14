@@ -3,13 +3,20 @@ defmodule DiscussWeb.TopicController do
 
   alias Discuss.Topics, as: DT
 
+  plug DiscussWeb.Plugs.RequireAuth when action in [:new, :create, :edit, :update, :delete]
+  plug :check_user_is_topic_owner when action in [:edit, :update, :delete]
 
+  # ======================================================
   def index(conn, _param) do
     IO.inspect(conn.assigns)
     topics = DT.list_topics()
     render conn, "index.html", topics: topics
   end
 
+  def show(conn, %{"id" => topic_id}) do
+    topic = DT.get_topic!(topic_id)
+    render conn, "show.html", topic: topic
+  end
   # ======================================================
   def new(conn, _params) do
     changeset = DT.Topic.changeset(%DT.Topic{}, %{})
@@ -17,7 +24,11 @@ defmodule DiscussWeb.TopicController do
   end
 
   def create(conn, %{"topic" => topic}) do
-    case DT.create_topic(topic) do
+    changeset = conn.assigns.user
+    |> Ecto.build_assoc(:topics)
+    |> DT.Topic.changeset(topic)
+
+    case Discuss.Repo.insert(changeset) do
       {:ok, post} ->
         conn
         |> put_flash(:info, "Created Topic \"#{post.title}\"")
@@ -59,5 +70,19 @@ defmodule DiscussWeb.TopicController do
     conn
     |> put_flash(:info, "Deleted")
     |> redirect(to: Routes.topic_path(conn, :index))
+  end
+  # ==================== PLUGS =========================
+  def check_user_is_topic_owner(conn, _plugparams) do
+    %{params: %{"id" => topic_id}} = conn
+
+    topic = DT.Topic.get_topic!(topic_id)
+    if topic.user_id == conn.assigns.user.id do
+        conn
+    else
+        conn
+        |> put_flash(:error, "You do not have permission to do this")
+        |> redirect(to: Routes.topic_path(conn, :index))
+        |> halt()
+    end
   end
 end

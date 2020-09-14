@@ -24,6 +24,7 @@ defmodule DiscussWeb.Router do
     # get "/:id/edit", TopicController, :edit
     # put "/:id", TopicController, :update
     # delete "/:id", TopicController, :delete
+    # get "/:id", TopicController, :show
     resources "/", TopicController # implements the RESTful convention based routes commented out above
   end
 
